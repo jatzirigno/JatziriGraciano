@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+ <head>
+   <meta charset="utf-8">
+   <title>Página 2</title>
+   <style>
+    body {
+        background-color:whitesmoke;
+        text-align: center;
+    }
+    h1{
+        color: rgb(208, 180, 56);
+    }
+    h2 {
+        color:maroon;
+        font-variant: small-caps;
+    }
+    p {
+        color:gray;
+        font-size: 40px;
+    }
+    </style>
+    <script>
+        function init(){
+             var nombreactor = document.getElementById("bestactor");
+              nombreactor.innerHTML = " Wagner Moura";
+              var nombredrama= document.getElementById("bestdrama");
+              nombredrama.innerHTML = "Hamnet";
+              var bestcomedy= document.getElementById("bestcomedy");
+              bestcomedy.innerHTML = "One Battle After Another";
+              var bestactress= document.getElementById("bestactress");
+              bestactress.innerHTML = "Jessie Buckley";
+        }
+        window.onload = init;
+   </script>
+  
+  
+ </head>
+ <body>
+     <h1>Golden Globe Winners 2026</h1>
+ </br>
+     <h2>Best Motion Picture - Drama</h2>
+     <p id="bestdrama">Name Drama</p>
+ </br>
+     <h2>Best Motion Picture - Musical or Comedy</h2>
+     <p id="bestcomedy">Name Comedy</p>
+ </br>
+     <h2>Best performance by an actress in a motion picture - drama</h2>
+     <p id="bestactress">Name Actress</p>
+ </br>
+     <h2>Best performance by an actor in a motion picture - drama</h2>
+     <p id="bestactor">Name Actor</p>
+ </body>
+</html>
+
