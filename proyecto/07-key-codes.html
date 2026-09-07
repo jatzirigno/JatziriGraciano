@@ -1,0 +1,174 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Key Codes</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <h1>Un Otoño con Winnie Pooh</h1>
+    <canvas id="canvas" width="700" height="650"></canvas>
+    <aside>Presiona A, B, C, D, E o F para cambiar de personaje.</aside>
+    <script src="keycodes.js"></script>
+    
+    <script>
+    window.onload = function () {
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+
+        // Tamaño de la imagen
+        var ancho = 400;
+        var alto = 400;
+
+        // Posición de la imagen
+        var x = (canvas.width - ancho) / 2;
+        var y = 180;
+
+        // Imágenes de los personajes
+        var poo = new Image();
+        poo.src = "POO.jpg";
+
+        var tig = new Image();
+        tig.src = "TIG.jpg";
+
+        var rito = new Image();
+        rito.src = "RITO.jpg";
+
+        var pig = new Image();
+        pig.src = "PIG.jpg";
+
+        var igor = new Image();
+        igor.src = "IGOR.jpg";
+
+        var final = new Image();
+        final.src = "FINAL.jpg";
+
+    // Función para mostrar el personaje
+    function mostrarPersonaje(nombre, descripcion, imagen) {
+        context.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        // Nombre del personaje
+        context.font = "40px Verdana";
+        context.fillStyle = "#8E8238";
+        context.textAlign = "center";
+        context.fillText(
+            nombre,
+            canvas.width / 2,
+            100
+        );
+
+        // Imagen
+        context.drawImage(
+            imagen,
+            x,
+            y,
+            ancho,
+            alto
+        );
+
+        // Descripción
+        context.font = "18px Verdana";
+        context.fillStyle = "#914640";
+        context.textAlign = "center";
+
+        context.fillText(
+            descripcion,
+            canvas.width / 2,
+            y + alto + 50
+        );
+    }
+
+      function onKeyboardEvent (event) {
+        switch (event.keyCode) {
+        case keycode.UP:
+          console.log("up!");
+          context.clearRect(0, 0, innerWidth, innerHeight);
+          y-=5;
+          context.fillRect(x,y,100,100);
+          break;
+        case keycode.DOWN:
+          console.log("down!");
+          context.clearRect(0, 0, innerWidth, innerHeight);
+          y+=5;
+          context.fillRect(x,y,100,100);
+          break;
+        case keycode.LEFT:
+          console.log("left!");
+          context.clearRect(0, 0, innerWidth, innerHeight);
+          x-=5;
+          context.fillRect(x,y,100,100);
+          break;
+        case keycode.RIGHT:
+          console.log("right!");
+          context.clearRect(0, 0, innerWidth, innerHeight);
+          x+=5;
+          context.fillRect(x,y,100,100);
+          break;
+        case keycode.SPACE:
+          console.log("Jump!");
+          break;
+
+        case keycode.A:
+            console.log("Letra A");
+            mostrarPersonaje(
+            "Poo",
+            "Amable, tranquilo e ingenuo.",
+            poo);
+            break;
+        
+        case keycode.B:
+            console.log("Letra B");
+            mostrarPersonaje(
+            "Tigger",
+            "Siempre está saltando y buscando aventuras.",
+            tig);
+            break;
+
+        case keycode.C:
+            console.log("Letra C");
+            mostrarPersonaje(
+            "Rito",
+            "Pequeño, curioso y lleno de energía.",
+            rito);
+            break;
+
+        case keycode.D:
+            console.log("Letra D");
+            mostrarPersonaje(
+            "Piglet",
+            "Tímido y nervioso, pero muy leal.",
+            pig);
+            break;
+
+        case keycode.E:
+            console.log("Letra E");
+            mostrarPersonaje(
+            "Igor",
+            "Serio, pesimista y algo triste:(",
+            igor);
+            break;
+
+        case keycode.F:
+            console.log("Letra F");
+            mostrarPersonaje(
+            "Feliz inicio de otoño",
+            "happy happy!!",
+            final);
+            break;
+            
+        default:
+            console.log(event.keyCode);
+        }
+      }
+
+      window.addEventListener('keydown', onKeyboardEvent, false);
+    };
+    </script>
+    
+  </body>
+</html>
