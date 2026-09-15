@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Calabaza sigue al mouse</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+
+    <canvas id="canvas" width="1000" height="700"></canvas>
+
+    <aside>Mueve el mouse sobre el canvas.</aside>
+
+    <script src="utils.js"></script>
+
+    <script>
+    window.onload = function () {
+
+      var canvas = document.getElementById('canvas'),
+          context = canvas.getContext('2d'),
+          mouse = utils.captureMouse(canvas);
+
+      // IMÁGENES
+      var calabaza = new Image();
+      calabaza.src = "calabaza.png";
+
+      var ojoiz = new Image();
+      ojoiz.src = "ojoiz.png";
+
+      var ojoder = new Image();
+      ojoder.src = "ojoder.png";
+
+
+      (function drawFrame () {
+
+        window.requestAnimationFrame(drawFrame);
+
+        // LIMPIAR CANVAS
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+
+        // --------------------------------
+        // CALABAZA
+        // --------------------------------
+
+        context.drawImage(
+          calabaza,
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+
+
+        // --------------------------------
+        // PUPILA IZQUIERDA
+        // --------------------------------
+
+        var xIzquierdo = 400;
+        var yIzquierdo = 330;
+
+        var dxIzquierdo = mouse.x - xIzquierdo;
+        var dyIzquierdo = mouse.y - yIzquierdo;
+
+        var radianesIzquierdo =
+          Math.atan2(dyIzquierdo, dxIzquierdo);
+
+        // Qué tanto se puede mover la pupila
+        var distanciaIzquierda = 15;
+
+        var pupilaIzquierdaX =
+          xIzquierdo +
+          Math.cos(radianesIzquierdo) * distanciaIzquierda;
+
+        var pupilaIzquierdaY =
+          yIzquierdo +
+          Math.sin(radianesIzquierdo) * distanciaIzquierda;
+
+
+        context.drawImage(
+          ojoiz,
+          pupilaIzquierdaX - ojoiz.width / 2,
+          pupilaIzquierdaY - ojoiz.height / 2
+        );
+
+
+        // --------------------------------
+        // PUPILA DERECHA
+        // --------------------------------
+
+        var xDerecho = 570;
+        var yDerecho = 330;
+
+        var dxDerecho = mouse.x - xDerecho;
+        var dyDerecho = mouse.y - yDerecho;
+
+        var radianesDerecho =
+          Math.atan2(dyDerecho, dxDerecho);
+
+        // Qué tanto se puede mover la pupila
+        var distanciaDerecha = 15;
+
+        var pupilaDerechaX =
+          xDerecho +
+          Math.cos(radianesDerecho) * distanciaDerecha;
+
+        var pupilaDerechaY =
+          yDerecho +
+          Math.sin(radianesDerecho) * distanciaDerecha;
+
+
+        context.drawImage(
+          ojoder,
+          pupilaDerechaX - ojoder.width / 2,
+          pupilaDerechaY - ojoder.height / 2
+        );
+
+
+      }());
+
+    };
+    </script>
+
+  </body>
+</html>
