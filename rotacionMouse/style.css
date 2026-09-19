@@ -9,12 +9,18 @@ aside, footer, header, nav, section {
  */
 
 body {
-  background-color: #bbb;
-  color: #383838;
+  background-color: #dd9256;
+  color: #543202;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 30px;
+  text-align: center;
 }
 
 #canvas {
   background-color: #fff;
+  border: 3px solid #543202;
+  border-radius: 15px ;
+
 }
 
 header {
