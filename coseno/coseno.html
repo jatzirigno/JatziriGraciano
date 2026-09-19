@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Pulse Pelota</title>
+    <link rel="stylesheet" href="style.css">
+  </head>  
+  <body>
+    <canvas id="canvas" width="1000" height="900"></canvas>
+    
+    <script src="utils.js"></script>
+
+    <script>
+    window.onload = function () {
+      var canvas = document.getElementById('canvas'),
+          context = canvas.getContext('2d'),
+          img = new Image(),
+          fondo = new Image(),
+          angle = 0,
+          centerX = canvas.width / 2,
+          centerY = canvas.height / 2,
+          radius = 50,
+          speed = 0.05;
+
+          // Imagen de la pelota
+          img.src = "image.png";
+
+          // Imagen de fondo
+          fondo.src = "fondo.png";
+
+      (function drawFrame () {
+            window.requestAnimationFrame(drawFrame, canvas);
+
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Dibujar el fondo
+            context.drawImage(
+              fondo,
+              0,
+              0,
+              canvas.width,
+              canvas.height
+            );
+            
+            // Movimiento con seno y coseno
+            var x = centerX + Math.sin(angle) * radius;
+            var y = centerY + Math.cos(angle) * radius;
+
+            // Escala usando seno
+            var escala = 0.5 + Math.sin(angle) * 0.3;
+
+            var ancho = img.width * escala;
+            var alto = img.height * escala;
+
+            // Dibujar la imagen centrada
+            context.drawImage(
+              img,
+              x - ancho / 2,
+              y - alto / 2,
+              ancho,
+              alto
+            );
+
+            angle += speed;
+        }()
+        );  
+      
+    };
+    </script>
+  </body>
+</html>
