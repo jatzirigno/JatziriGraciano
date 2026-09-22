@@ -1,0 +1,165 @@
+<!doctype html>
+
+<html> <head> <meta charset="utf-8"> 
+<title>Mario Star</title> 
+<link rel="stylesheet" href="style.css"> </head>
+
+<body> 
+    <h1>Reto onda sinoidal</h1>
+
+<canvas id="canvas" width="1000" height="600"></canvas>
+
+<script src="utils.js"></script>
+
+<script>
+  window.onload = function () {
+
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
+
+    var angle = 0;
+    var range = 100;
+    var centerY = canvas.height / 2;
+
+    var xspeed = 2;
+    var yspeed = 0.1;
+
+    var xpos = 40;
+    var ypos = centerY;
+
+    var direction = 1;
+
+    var starSize = 80;
+
+    /*
+     * Imagen de fondo.
+     */
+    var background = new Image();
+
+    /*
+     * Puedes cambiar esta imagen por cualquier imagen
+     * que tengas en tu proyecto.
+     */
+    background.src = "fondo.png";
+
+    /*
+     * Imagen de la estrella.
+     */
+    var star = new Image();
+
+    star.src = "star.png";
+
+
+    function drawStar() {
+
+      context.save();
+
+      context.translate(
+        xpos,
+        ypos
+      );
+
+      /*
+       * Sombra para darle profundidad.
+       */
+      context.shadowColor = "rgba(0, 0, 0, 0.35)";
+      context.shadowBlur = 12;
+      context.shadowOffsetX = 3;
+      context.shadowOffsetY = 4;
+
+      context.drawImage(
+        star,
+        -starSize,
+        -starSize,
+        starSize * 2,
+        starSize * 2
+      );
+
+      context.restore();
+    }
+
+
+    function drawFrame() {
+
+      window.requestAnimationFrame(drawFrame);
+
+      /*
+       * Dibujar el fondo.
+       */
+      if (background.complete) {
+
+        context.drawImage(
+          background,
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+
+      } else {
+
+        context.fillStyle = "#eeeaff";
+        context.fillRect(
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+      }
+
+
+      /*
+       * Movimiento horizontal.
+       */
+      xpos += xspeed * direction;
+
+
+      /*
+       * Movimiento sinusoidal.
+       */
+      angle += yspeed;
+
+      ypos =
+        centerY +
+        Math.sin(angle) * range;
+
+
+      /*
+       * Límites horizontales.
+       *
+       * Cuando la estrella llega a un borde,
+       * cambia de dirección.
+       */
+      if (xpos >= canvas.width - starSize) {
+
+        xpos = canvas.width - starSize;
+        direction = -1;
+
+      }
+
+      if (xpos <= starSize) {
+
+        xpos = starSize;
+        direction = 1;
+
+      }
+
+
+      /*
+       * Dibujar la estrella.
+       */
+      if (star.complete) {
+        drawStar();
+      }
+    }
+
+
+    /*
+     * Comenzar la animación.
+     */
+    drawFrame();
+
+  };
+</script>
+</body> 
+</html>
