@@ -1,0 +1,300 @@
+<!doctype html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <title>Dibujo de Figuras</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Fuente de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap" rel="stylesheet">
+
+    <style>
+      h1 {
+        text-align: center;
+        font-family: 'Fredoka', 'Trebuchet MS', sans-serif;
+        font-weight: 600;
+        font-size: 48px;
+        letter-spacing: 2px;
+        color: #452b1a;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <h1>Dibujo de Figuras</h1>
+
+    <canvas id="canvas" width="1100" height="900"></canvas>
+
+    <script>
+    window.onload = function () {
+
+      var canvas = document.getElementById('canvas'),
+          context = canvas.getContext('2d');
+
+      var gradiente;
+
+
+      /* --------------------------------
+         TORRE IZQUIERDA
+      -------------------------------- */
+
+      context.save();
+
+      // Rectángulo con degradado horizontal (amarillo a naranja)
+      gradiente = context.createLinearGradient(50, 0, 260, 0);
+      gradiente.addColorStop(0, 'gold');
+      gradiente.addColorStop(1, 'darkorange');
+      context.fillStyle = gradiente;
+      context.fillRect(50, 520, 210, 280);
+
+      // Techo triangular con degradado vertical (verde claro a verde oscuro)
+      gradiente = context.createLinearGradient(0, 370, 0, 520);
+      gradiente.addColorStop(0, 'limegreen');
+      gradiente.addColorStop(1, 'darkgreen');
+      context.fillStyle = gradiente;
+      context.beginPath();
+      context.moveTo(50, 520);
+      context.lineTo(155, 370);
+      context.lineTo(260, 520);
+      context.closePath();
+      context.fill();
+
+      // Ventana en forma de rombo
+      context.fillStyle = 'skyblue';
+      context.beginPath();
+      context.moveTo(155, 580);
+      context.lineTo(210, 635);
+      context.lineTo(155, 690);
+      context.lineTo(100, 635);
+      context.closePath();
+      context.fill();
+
+
+      /* --------------------------------
+         BANDERA IZQUIERDA
+      -------------------------------- */
+
+      context.fillStyle = 'red';
+      context.beginPath();
+      context.moveTo(155, 370);
+      context.lineTo(155, 280);
+      context.lineTo(230, 325);
+      context.lineTo(155, 370);
+      context.closePath();
+      context.fill();
+
+
+      /* --------------------------------
+         TORRE CENTRAL
+      -------------------------------- */
+
+      // Rectángulo con degradado vertical (naranja a rojo oscuro)
+      gradiente = context.createLinearGradient(0, 370, 0, 800);
+      gradiente.addColorStop(0, 'orangered');
+      gradiente.addColorStop(1, '#8b1a00');
+      context.fillStyle = gradiente;
+      context.fillRect(260, 370, 210, 430);
+
+      // Techo triangular con degradado vertical (morado a índigo)
+      gradiente = context.createLinearGradient(0, 210, 0, 370);
+      gradiente.addColorStop(0, 'mediumorchid');
+      gradiente.addColorStop(1, 'indigo');
+      context.fillStyle = gradiente;
+      context.beginPath();
+      context.moveTo(260, 370);
+      context.lineTo(365, 210);
+      context.lineTo(470, 370);
+      context.closePath();
+      context.fill();
+
+      // Ventana rombo
+      context.fillStyle = 'skyblue';
+      context.beginPath();
+      context.moveTo(365, 470);
+      context.lineTo(425, 530);
+      context.lineTo(365, 590);
+      context.lineTo(305, 530);
+      context.closePath();
+      context.fill();
+
+      // Puerta
+      context.fillStyle = 'darkred';
+      context.fillRect(310, 630, 110, 170);
+
+
+      /* --------------------------------
+         TORRE DERECHA
+      -------------------------------- */
+
+      // Rectángulo con degradado horizontal (naranja a amarillo)
+      gradiente = context.createLinearGradient(470, 0, 690, 0);
+      gradiente.addColorStop(0, 'darkorange');
+      gradiente.addColorStop(1, 'gold');
+      context.fillStyle = gradiente;
+      context.fillRect(470, 470, 220, 330);
+
+      // Techo triangular con degradado vertical (verde claro a verde oscuro)
+      gradiente = context.createLinearGradient(0, 330, 0, 470);
+      gradiente.addColorStop(0, 'limegreen');
+      gradiente.addColorStop(1, 'darkgreen');
+      context.fillStyle = gradiente;
+      context.beginPath();
+      context.moveTo(470, 470);
+      context.lineTo(580, 330);
+      context.lineTo(690, 470);
+      context.closePath();
+      context.fill();
+
+      // Ventana circular
+      context.fillStyle = 'skyblue';
+      context.beginPath();
+      context.arc(580, 565, 50, 0, Math.PI * 2);
+      context.fill();
+
+      // Rombo morado
+      context.fillStyle = 'mediumorchid';
+      context.beginPath();
+      context.moveTo(580, 650);
+      context.lineTo(625, 695);
+      context.lineTo(580, 740);
+      context.lineTo(535, 695);
+      context.closePath();
+      context.fill();
+
+
+            /* --------------------------------
+         BANDERA DERECHA
+      -------------------------------- */
+
+      context.fillStyle = 'red';
+      context.beginPath();
+      context.moveTo(580, 350);
+      context.lineTo(580, 250);
+      context.lineTo(655, 290);
+      context.lineTo(580, 330);
+      context.closePath();
+      context.fill();
+
+
+      context.restore();
+
+
+      /* --------------------------------
+         ZORRO SIMPLIFICADO
+      -------------------------------- */
+
+      context.save();
+      context.translate(740, 300);    // posición en el canvas
+      context.scale(0.35, 0.35);      // tamaño
+
+      // Forma exterior negra
+      context.fillStyle = '#222';
+      context.beginPath();
+      context.moveTo(180, 45);     // oreja izquierda
+      context.lineTo(298, 100);
+      context.lineTo(380, 218);    // frente
+      context.lineTo(520, 218);
+      context.lineTo(602, 100);
+      context.lineTo(720, 45);     // oreja derecha
+      context.lineTo(708, 270);
+      context.lineTo(665, 335);
+      context.lineTo(748, 405);    // mejilla derecha
+      context.lineTo(450, 668);    // punta inferior
+      context.lineTo(152, 408);    // mejilla izquierda
+      context.lineTo(215, 335);
+      context.lineTo(192, 285);
+      context.closePath();
+      context.fill();
+
+      // Parte amarilla
+      context.fillStyle = 'gold';
+      context.beginPath();
+      context.moveTo(210, 90);     // oreja izquierda
+      context.lineTo(280, 122);
+      context.lineTo(368, 245);    // frente
+      context.lineTo(532, 245);
+      context.lineTo(620, 122);
+      context.lineTo(690, 90);     // oreja derecha
+      context.lineTo(672, 300);
+      context.lineTo(705, 398);    // mejilla derecha
+      context.lineTo(610, 425);
+      context.lineTo(485, 600);    // hocico
+      context.lineTo(415, 600);
+      context.lineTo(290, 420);
+      context.lineTo(195, 398);    // mejilla izquierda
+      context.lineTo(232, 310);
+      context.lineTo(212, 270);
+      context.closePath();
+      context.fill();
+
+      // Interior oreja izquierda
+      context.fillStyle = '#222';
+      context.beginPath();
+      context.moveTo(230, 127);
+      context.lineTo(320, 262);
+      context.lineTo(268, 315);
+      context.lineTo(230, 270);
+      context.closePath();
+      context.fill();
+
+      // Interior oreja derecha
+      context.beginPath();
+      context.moveTo(668, 127);
+      context.lineTo(580, 262);
+      context.lineTo(632, 315);
+      context.lineTo(668, 270);
+      context.closePath();
+      context.fill();
+
+      // Ojo izquierdo (triángulo)
+      context.beginPath();
+      context.moveTo(298, 357);
+      context.lineTo(392, 410);
+      context.lineTo(415, 498);
+      context.closePath();
+      context.fill();
+
+      // Ojo derecho (triángulo)
+      context.beginPath();
+      context.moveTo(602, 357);
+      context.lineTo(508, 410);
+      context.lineTo(485, 498);
+      context.closePath();
+      context.fill();
+
+      // Nariz
+      context.beginPath();
+      context.moveTo(420, 592);
+      context.lineTo(480, 592);
+      context.lineTo(450, 620);
+      context.closePath();
+      context.fill();
+
+      // Mancha blanca izquierda
+      context.fillStyle = 'white';
+      context.beginPath();
+      context.moveTo(222, 430);
+      context.lineTo(290, 445);
+      context.lineTo(335, 528);
+      context.closePath();
+      context.fill();
+
+      // Mancha blanca derecha
+      context.beginPath();
+      context.moveTo(678, 430);
+      context.lineTo(610, 445);
+      context.lineTo(565, 528);
+      context.closePath();
+      context.fill();
+
+      context.restore();
+
+    };
+    </script>
+
+  </body>
+</html>
