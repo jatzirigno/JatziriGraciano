@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <title>Mi Paint</title>
+    <style>
+      body {
+        text-align: center;
+        margin-top: 20px;
+        background-color: #F7C8D3;
+        color: #2D3A47;
+        font-family: impact, sans-serif;
+      }
+      canvas {
+        background-color: white;
+        border: 4px solid #2D3A47;
+        cursor: crosshair;
+        max-width: 100%;
+      }
+      .barra {
+        margin-bottom: 8px;
+      }
+
+      /* Colores */
+      .colores button {
+        width: 70px;
+        height: 40px;
+        margin: 0 4px;
+        border: 3px solid rgba(45, 58, 71, 0.3);
+        border-radius: 15px;
+        cursor: pointer;
+      }
+      .colores button:hover { opacity: 0.6; }
+      .colores button.activo { border-color: #2D3A47; transform: scale(1.1); }
+
+      /* Grosores y borrar todo */
+      .grosores button, #clear {
+        height: 45px;
+        margin: 0 4px;
+        padding: 0 20px;
+        background: #2D3A47;
+        color: #FFF7E6;
+        font: 22px impact, sans-serif;
+        border: 3px solid transparent;
+        border-radius: 15px;
+        cursor: pointer;
+      }
+      .grosores button:hover, #clear:hover { opacity: 0.6; }
+      .grosores button.activo { background: #A8B58A; color: #2D3A47; border-color: #2D3A47; }
+      #clear { background: #B46A72; color: #FFF7E6; }
+    </style>
+  </head>
+  <body>
+    <div class="barra colores" id="colores">
+      <button type="button" value="#FFF7E6" style="background:#FFF7E6" title="Vanilla Cream"></button>
+      <button type="button" value="#F7C8D3" style="background:#F7C8D3" title="Blush Petal"></button>
+      <button type="button" value="#B46A72" style="background:#B46A72" title="Rosewood"></button>
+      <button type="button" value="#A8B58A" style="background:#A8B58A" title="Sage Leaf"></button>
+      <button type="button" value="#A9B7C6" style="background:#A9B7C6" title="Misty Sky"></button>
+      <button type="button" value="#2D3A47" style="background:#2D3A47" title="Midnight Lagoon" class="activo"></button>
+    </div>
+
+    <div class="barra grosores" id="grosores">
+      <button type="button" value="2">Fino</button>
+      <button type="button" value="6" class="activo">Medio</button>
+      <button type="button" value="14">Grueso</button>
+      <button id="clear" type="button">Borrar todo</button>
+    </div>
+
+    <canvas id="canvas" width="1000" height="700"></canvas>
+    <aside>Haz clic y dibuja con el mouse.</aside>
+
+    <script>
+      window.onload = function () {
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        var dibujando = false;
+
+        // Estilo inicial de la pluma
+        context.strokeStyle = '#2D3A47';
+        context.lineWidth = 6;
+        context.lineCap = 'round';
+        context.lineJoin = 'round';
+
+        // Posición del mouse relativa al canvas (sustituye a utils.js)
+        function posicion(event) {
+          var rect = canvas.getBoundingClientRect();
+          return {
+            x: (event.clientX - rect.left) * (canvas.width / rect.width),
+            y: (event.clientY - rect.top) * (canvas.height / rect.height)
+          };
+        }
+
+        canvas.addEventListener('mousedown', function (event) {
+          var p = posicion(event);
+          dibujando = true;
+          context.beginPath();
+          context.moveTo(p.x, p.y);
+          // Punto inicial para que un clic sin mover también deje marca
+          context.lineTo(p.x, p.y);
+          context.stroke();
+        });
+
+        canvas.addEventListener('mousemove', function (event) {
+          if (!dibujando) return;
+          var p = posicion(event);
+          context.lineTo(p.x, p.y);
+          context.stroke();
+        });
+
+        function terminar() { dibujando = false; }
+        canvas.addEventListener('mouseup', terminar);
+        canvas.addEventListener('mouseleave', terminar);
+
+        // Marca como activo el botón elegido dentro de un grupo
+        function activar(grupo, boton) {
+          var botones = grupo.getElementsByTagName('button');
+          for (var i = 0; i < botones.length; i++) {
+            botones[i].classList.remove('activo');
+          }
+          boton.classList.add('activo');
+        }
+
+        // Cambiar color
+        var colores = document.getElementById('colores');
+        colores.addEventListener('click', function (event) {
+          if (event.target.tagName !== 'BUTTON') return;
+          context.strokeStyle = event.target.value;
+          activar(colores, event.target);
+        });
+
+        // Cambiar grosor (el botón "Borrar todo" no tiene la clase de grosor)
+        var grosores = document.getElementById('grosores');
+        grosores.addEventListener('click', function (event) {
+          var boton = event.target;
+          if (boton.tagName !== 'BUTTON' || boton.id === 'clear') return;
+          context.lineWidth = Number(boton.value);
+          activar(grosores, boton);
+        });
+
+        // Borrar todo
+        document.getElementById('clear').addEventListener('click', function () {
+          context.clearRect(0, 0, canvas.width, canvas.height);
+        });
+      };
+    </script>
+  </body>
+</html>
