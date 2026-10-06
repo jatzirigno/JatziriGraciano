@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Reloj Gato</title>
+    <style>
+      /* Fondo de cuadros fuera del canvas (el mosaico se repite sin costuras) */
+      body { margin: 0; background: #3f2113 url("cuadros_tile.png") repeat; }
+      /* El canvas queda como un marco visible alrededor del gato */
+      canvas { display: block; margin: 20px auto; background: #ffffff; border: 4px solid #1a1a1a; border-radius: 12px; }
+    </style>
+  </head>
+  <body>
+    <!-- Canvas de 400 de ancho; el gato (300 x 858) queda centrado con 50 px de margen -->
+    <canvas id="canvas" width="400" height="958"></canvas>
+
+    <script>
+    // ---------- Clase Arrow (manecilla) ----------
+    // Igual que en tu guía: x, y, rotation y draw(context).
+    // Diferencia: el origen (x, y) esta en la COLA de la flecha, para que gire
+    // como una manecilla. Con rotation = 0 apunta hacia la derecha.
+    function Arrow(length, width, color) {
+      this.x = 0;
+      this.y = 0;
+      this.rotation = 0;
+      this.length = length || 80;
+      this.width = width || 6;
+      this.color = color || "#000000";
+    }
+
+    Arrow.prototype.draw = function (context) {
+      var head = this.width * 2.2;           // largo de la punta
+      var shaft = this.length - head;        // largo del cuerpo
+
+      context.save();
+      context.translate(this.x, this.y);
+      context.rotate(this.rotation);
+
+      context.fillStyle = this.color;
+      context.beginPath();
+      context.moveTo(-this.length * 0.15, -this.width / 2);  // pequena cola
+      context.lineTo(shaft, -this.width / 2);
+      context.lineTo(shaft, -this.width);
+      context.lineTo(this.length, 0);
+      context.lineTo(shaft, this.width);
+      context.lineTo(shaft, this.width / 2);
+      context.lineTo(-this.length * 0.15, this.width / 2);
+      context.closePath();
+      context.fill();
+
+      context.restore();
+    };
+
+    // ---------- Programa principal ----------
+    window.onload = function () {
+      var canvas = document.getElementById('canvas'),
+          context = canvas.getContext('2d'),
+          patron = new Image(),   // fondo de otoño (ocupa todo el canvas)
+          fondo = new Image(),    // imagen del gato (con fondo transparente)
+          hourHand   = new Arrow(33, 6, "#1f3a8a"),
+          minuteHand = new Arrow(52, 4.5, "#2563eb"),
+          secondHand = new Arrow(58, 2.5, "#d62839"),
+          margenX = 50,    // margen entre el borde del canvas y el gato
+          margenY = 50,
+          centroX = 148 + margenX,   // centro de la esfera dentro del canvas
+          centroY = 399 + margenY,
+          velocidad = 120,             // 1 = tiempo real; 120 = el reloj corre 120 veces mas rapido
+          inicio = Date.now();         // momento en que arranca el reloj
+
+      patron.src = "fondo_otono.png";
+      fondo.src = "gatoreloj_web.png";
+
+      [hourHand, minuteHand, secondHand].forEach(function (hand) {
+        hand.x = centroX;
+        hand.y = centroY;
+      });
+
+      (function drawFrame () {
+        window.requestAnimationFrame(drawFrame, canvas);
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        // 1. Dibujar primero el fondo de otoño y encima el gato
+        context.drawImage(patron, 0, 0);
+        context.drawImage(fondo, margenX, margenY);
+
+        // 2. Calcular la hora (acelerada)
+        // La hora simulada avanza "velocidad" veces mas rapido que la real
+        var transcurrido = (Date.now() - inicio) * velocidad,
+            ahora = new Date(inicio + transcurrido),
+            seg  = ahora.getSeconds() + ahora.getMilliseconds() / 1000,
+            min  = ahora.getMinutes() + seg / 60,
+            hora = (ahora.getHours() % 12) + min / 60;
+
+        // 3. Grados -> radianes. Se resta 90 porque la flecha con rotation = 0
+        //    apunta a las 3 y el reloj empieza arriba (las 12).
+        secondHand.rotation = (seg  * 6  - 90) * Math.PI / 180;  // 360/60 = 6 grados
+        minuteHand.rotation = (min  * 6  - 90) * Math.PI / 180;  // 360/60 = 6 grados
+        hourHand.rotation   = (hora * 30 - 90) * Math.PI / 180;  // 360/12 = 30 grados
+
+        // 4. Dibujar manecillas (la de segundos al final para que quede arriba)
+        hourHand.draw(context);
+        minuteHand.draw(context);
+        secondHand.draw(context);
+
+        // 5. Punto central
+        context.fillStyle = "#d62839";
+        context.beginPath();
+        context.arc(centroX, centroY, 3.5, 0, Math.PI * 2);
+        context.fill();
+      }());
+    };
+    </script>
+  </body>
+</html>
