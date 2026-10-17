@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulación de nave</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%; min-height: 100%;
+      background: #f4c6cf linear-gradient(160deg, #f4c6cf, #fbe3d6) fixed; /* rosa palo a durazno */
+    }
+    body {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 12px; padding: 20px; min-height: 100vh;
+      font-family: system-ui, sans-serif; color: #7a2f45;
+    }
+    h1 { font-size: 20px; font-weight: 600; letter-spacing: .02em; }
+    canvas {
+      display: block; cursor: crosshair;
+      max-width: 100%; height: auto;
+      border: 3px solid #ffffff; border-radius: 10px;
+      box-shadow: 0 12px 36px rgba(122, 47, 69, .28);
+    }
+  </style>
+</head>
+<body>
+  <h1>Simulación de nave</h1>
+  <canvas id="juego"></canvas>
+
+  <script src="navecita.js"></script>
+  <script>
+    // ============ CONFIGURACIÓN ============
+    const FRICCION    = 0.985;   // por frame a 60fps (1 = sin fricción, 0.9 = mucha)
+    const ACELERACION = 0.00045; // fuerza hacia el mouse (por píxel de distancia)
+    const ACEL_MAX    = 0.9;     // aceleración máxima (px/frame²)
+    const VEL_MAX     = 12;      // velocidad máxima (px/frame)
+    const REBOTE      = 0.55;    // 0 = se pega a la pared, 1 = rebote perfecto
+    const ZONA_MUERTA = 12;      // cerca del mouse no acelera
+    const ANCHO_NAVE  = 130;     // tamaño del biplano en pantalla (px)
+    const ANCHO_CANVAS = 900;    // tamaño del canvas (px)
+    const ALTO_CANVAS  = 550;
+
+    // ============ CANVAS ============
+    const canvas = document.getElementById("juego");
+    const ctx = canvas.getContext("2d");
+    let W, H;
+
+    function ajustar() {
+      W = canvas.width = ANCHO_CANVAS;
+      H = canvas.height = ALTO_CANVAS;
+    }
+
+    // ============ NAVE ============
+    const nave = new Navecita("nave.png", null, ANCHO_NAVE);
+    const mouse = { x: 0, y: 0 };
+    const particulas = [];
+
+    // ============ FONDO ============
+    const fondo = new Image();
+    let fondoListo = false;
+    fondo.onload = () => { fondoListo = true; };
+    fondo.src = "fondo.jpg";
+
+    // El fondo se dibuja un poco más grande que el canvas para poder moverlo (efecto parallax)
+    const ZOOM_FONDO = 1.12;
+
+    function dibujarFondo() {
+      if (!fondoListo) {
+        // Cielo provisional mientras carga la imagen
+        const g = ctx.createLinearGradient(0, 0, 0, H);
+        g.addColorStop(0, "#1f6fd6");
+        g.addColorStop(1, "#bfe3ff");
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, W, H);
+        return;
+      }
+
+      // La imagen cubre todo el canvas sin deformarse
+      const escala = Math.max(W / fondo.width, H / fondo.height) * ZOOM_FONDO;
+      const w = fondo.width * escala;
+      const h = fondo.height * escala;
+
+      // Se mueve al revés que la nave, así parece que hay profundidad
+      const x = -(w - W) * (nave.x / W);
+      const y = -(h - H) * (nave.y / H);
+      ctx.drawImage(fondo, x, y, w, h);
+    }
+
+    // ============ FÍSICA ============
+    // El mouse se mide dentro del canvas (también si la página lo reduce de tamaño)
+    canvas.addEventListener("mousemove", (e) => {
+      const r = canvas.getBoundingClientRect();
+      mouse.x = (e.clientX - r.left) * (canvas.width / r.width);
+      mouse.y = (e.clientY - r.top) * (canvas.height / r.height);
+    });
+
+    function actualizar(dt) {
+      // dt = 1 equivale a un frame a 60fps
+      const dx = mouse.x - nave.x;
+      const dy = mouse.y - nave.y;
+      const dist = Math.hypot(dx, dy);
+
+      // 1) Aceleración hacia el mouse (proporcional a la distancia, con tope)
+      let ax = 0, ay = 0;
+      if (dist > ZONA_MUERTA) {
+        const fuerza = Math.min(dist * ACELERACION * 60, ACEL_MAX);
+        ax = (dx / dist) * fuerza;
+        ay = (dy / dist) * fuerza;
+      }
+      nave.vx += ax * dt;
+      nave.vy += ay * dt;
+      nave.empuje = Math.hypot(ax, ay) / ACEL_MAX;
+
+      // 2) Fricción (independiente de los fps)
+      const f = Math.pow(FRICCION, dt);
+      nave.vx *= f;
+      nave.vy *= f;
+
+      // 3) Límite de velocidad
+      const v = Math.hypot(nave.vx, nave.vy);
+      if (v > VEL_MAX) {
+        nave.vx = (nave.vx / v) * VEL_MAX;
+        nave.vy = (nave.vy / v) * VEL_MAX;
+      }
+
+      // 4) Mover
+      nave.x += nave.vx * dt;
+      nave.y += nave.vy * dt;
+
+      // 5) Límites del canvas con rebote amortiguado (según el tamaño real de la nave)
+      const m = nave.medidas();
+      const mx = m.ancho / 2, my = m.alto / 2;
+      if (nave.x < mx)     { nave.x = mx;     nave.vx = Math.abs(nave.vx) * REBOTE; }
+      if (nave.x > W - mx) { nave.x = W - mx; nave.vx = -Math.abs(nave.vx) * REBOTE; }
+      if (nave.y < my)     { nave.y = my;     nave.vy = Math.abs(nave.vy) * REBOTE; }
+      if (nave.y > H - my) { nave.y = H - my; nave.vy = -Math.abs(nave.vy) * REBOTE; }
+
+      // 6) Orientación: el avión mira hacia donde va y se inclina al subir o bajar
+      // El avión mira hacia donde está el mouse (hacia donde empuja),
+      // así el humo siempre sale por la cola y nunca por delante
+      if (dx > 20) nave.direccion = 1;
+      if (dx < -20) nave.direccion = -1;
+      const empujaAdelante = ax * nave.direccion > 0; // solo hay motor/humo si acelera hacia donde mira
+      nave.showFlame = empujaAdelante && nave.empuje > 0.1;
+      const inclinacion = Math.max(-0.5, Math.min(0.5, nave.direccion * nave.vy * 0.06));
+      nave.rotation += (inclinacion - nave.rotation) * Math.min(0.12 * dt, 1);
+
+      // 7) Humo que deja el avión por la cola
+      if (empujaAdelante && nave.empuje > 0.05) {
+        const n = Math.ceil(nave.empuje * 2);
+        for (let i = 0; i < n; i++) {
+          particulas.push({
+            x: nave.x - nave.direccion * m.ancho * 0.45,
+            y: nave.y + (Math.random() - 0.5) * 10,
+            vx: -nave.direccion * (1 + Math.random() * 1.5) + nave.vx * 0.3,
+            vy: (Math.random() - 0.5) * 1 + nave.vy * 0.3,
+            vida: 1, r: 3 + Math.random() * 4
+          });
+        }
+      }
+      for (let i = particulas.length - 1; i >= 0; i--) {
+        const p = particulas[i];
+        p.x += p.vx * dt; p.y += p.vy * dt;
+        p.vida -= 0.025 * dt;
+        if (p.vida <= 0) particulas.splice(i, 1);
+      }
+    }
+
+    function dibujarParticulas() {
+      for (const p of particulas) {
+        ctx.fillStyle = `rgba(205,220,240,${p.vida * 0.28})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * (2 - p.vida), 0, 6.283);
+        ctx.fill();
+      }
+    }
+
+    // ============ BUCLE ============
+    let ultimo = performance.now();
+    function bucle(ahora) {
+      const dt = Math.min((ahora - ultimo) / 16.667, 3);
+      ultimo = ahora;
+
+      actualizar(dt);
+      dibujarFondo(ahora);
+      dibujarParticulas();
+      nave.draw(ctx, ahora);
+      requestAnimationFrame(bucle);
+    }
+
+    ajustar();
+    nave.x = mouse.x = W / 2;
+    nave.y = mouse.y = H / 2;
+    requestAnimationFrame(bucle);
+  </script>
+</body>
+</html>
