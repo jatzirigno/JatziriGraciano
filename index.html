@@ -1,61 +1,108 @@
 <!doctype html>
-<html>
- <head>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bitcount+Single:wght@100..900&display=swap" rel="stylesheet">
-   <meta charset="utf-8">
-   <title> Index</title>
-   <style>
+<html lang="es">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single:wght@100..900&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Index</title>
+  <style>
     body {
-        background-color: rgb(180, 106, 114);
-        font-size: 40px;
-        text-align: center;
-        border: 45px solid rgb(255, 206, 227);
-    border-radius: 25px;
-    padding: 2opx;
+      margin: 0;
+      background-color: rgb(180, 106, 114);
+      border: 45px solid rgb(255, 206, 227);
+      border-radius: 25px;
+      padding: 20px;
+      text-align: center;
+      font-family: "Bitcount Single", sans-serif;
+      color: white;
     }
-    h1 {
-        font-family: "Bitcount Single", sans-serif;
-        color: rgb(247, 200, 211);
-        text-align: center;
-    }
-    p{
-        font-family: "Bitcount Single";
-        color: white;
-        font-size: 50px;
-        text-align: center;
-    }
-    ol {
-     margin: 0px auto;
-     padding-left: 400px;
-     text-align: left;
-     max-width: 25em;
-     font-size: 25px;
-     color: white;
-    }
-   </style>
- </head>
- <body>
-    <h1> Index Animación Dinámica</h1>
-    <img src="snoopcomp.png" alt="snoopy" width="450" height="400" >
-    <p> Mis trabajos:</p>
-    <ol>
-        <li><a href="pagina01.html">Ir a mi primera página</a></li> 
-         <li><a href="ActGB/pagina2-1.html">Actividad Golden Globes</a></li> 
-         <li><a href="A4CANVAS/pagina4-1.html">Actividad Canvas</a></li>
-     <li><a href="reto-canvas/pagina-img-animada.html">Reto Canvas</a></li>
-      <li><a href="proyecto/07-key-codes.html">Proyecto Interactivo</a></li>
-      <li><a href="rotacionMouse/calamouse.html">Rotación Mouse</a></li>
-      <li><a href="coseno/coseno.html">Onda sinoidal</a></li>
-    <li><a href="reto/retoestrella.html">Reto onda sinoidal</a></li>
-     <li><a href="figcanvas/figcanvas.html">Figuras en canvas</a></li>
-      <li><a href="canvaspaint/canvaspaint.html">Paint App</a></li>
-      <li><a href="relojact/reloj_gato.html">Simulación de reloj</a></li>
-      <li><a href="Nave/index.html">Nave personalizada</a></li>
-      <li><a href="model/index.html">Modelo 3D</a></li>
-       <li><a href="https://katrina287439.itch.io/museo-the-little-pony">PROYECTO FINAL - Museo Virtual</a><li>
-    </ol>
- </body>
 
+    h1 {
+      color: rgb(247, 200, 211);
+      font-size: 40px;
+      margin: 10px 0 20px;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    h2 {
+      font-size: 40px;
+      font-weight: normal;
+      margin: 25px 0 15px;
+    }
+
+    .lista {
+      max-width: 620px;
+      margin: 0 auto 30px;
+      text-align: left;
+    }
+
+    .lista a {
+      display: flex;
+      align-items: baseline;
+      gap: 18px;
+      padding: 14px 6px;
+      border-bottom: 1px solid rgba(255, 206, 227, 0.4);
+      color: white;
+      text-decoration: none;
+      font-size: 24px;
+      transition: padding-left 0.2s, color 0.2s;
+    }
+
+    .lista a:hover {
+      padding-left: 16px;
+      color: rgb(255, 206, 227);
+    }
+
+    .num {
+      font-size: 16px;
+      color: rgb(255, 206, 227);
+      min-width: 26px;
+    }
+
+    .nombre { flex: 1; }
+
+    .tipo {
+      font-size: 15px;
+      color: rgb(247, 200, 211);
+    }
+
+    .final .nombre { color: rgb(255, 206, 227); }
+
+    @media (max-width: 600px) {
+      body { border-width: 15px; padding: 10px; }
+      h1 { font-size: 28px; }
+      h2 { font-size: 30px; }
+      .lista a { font-size: 20px; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Index Animación Dinámica</h1>
+  <img src="snoopcomp.png" alt="snoopy" width="450" height="400">
+
+  <h2>Mis trabajos:</h2>
+
+  <div class="lista">
+    <a href="pagina01.html"><span class="num">01</span><span class="nombre">Ir a mi primera página</span><span class="tipo">inicio</span></a>
+    <a href="ActGB/pagina2-1.html"><span class="num">02</span><span class="nombre">Actividad Golden Globes</span><span class="tipo">actividad</span></a>
+    <a href="A4CANVAS/pagina4-1.html"><span class="num">03</span><span class="nombre">Actividad Canvas</span><span class="tipo">actividad</span></a>
+    <a href="reto-canvas/pagina-img-animada.html"><span class="num">04</span><span class="nombre">Reto Canvas</span><span class="tipo">reto</span></a>
+    <a href="proyecto/07-key-codes.html"><span class="num">05</span><span class="nombre">Proyecto Interactivo</span><span class="tipo">proyecto</span></a>
+    <a href="rotacionMouse/calamouse.html"><span class="num">06</span><span class="nombre">Rotación Mouse</span><span class="tipo">actividad</span></a>
+    <a href="coseno/coseno.html"><span class="num">07</span><span class="nombre">Onda sinoidal</span><span class="tipo">actividad</span></a>
+    <a href="reto/retoestrella.html"><span class="num">08</span><span class="nombre">Reto onda sinoidal</span><span class="tipo">reto</span></a>
+    <a href="figcanvas/figcanvas.html"><span class="num">09</span><span class="nombre">Figuras en canvas</span><span class="tipo">actividad</span></a>
+    <a href="canvaspaint/canvaspaint.html"><span class="num">10</span><span class="nombre">Paint App</span><span class="tipo">proyecto</span></a>
+    <a href="relojact/reloj_gato.html"><span class="num">11</span><span class="nombre">Simulación de reloj</span><span class="tipo">actividad</span></a>
+    <a href="Nave/index.html"><span class="num">12</span><span class="nombre">Nave personalizada</span><span class="tipo">proyecto</span></a>
+    <a href="model/index.html"><span class="num">13</span><span class="nombre">Modelo 3D</span><span class="tipo">proyecto</span></a>
+    <a class="final" href="https://katrina287439.itch.io/museo-the-little-pony" target="_blank" rel="noopener"><span class="num">★</span><span class="nombre">PROYECTO FINAL - Museo Virtual</span><span class="tipo">final ↗</span></a>
+  </div>
+</body>
 </html>
